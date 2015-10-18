@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.layout.AnchorPane"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TitledPane fx:id="bigTP" HBox.hgrow="ALWAYS" 
+                    expanded="false"
+                    AnchorPane.topAnchor="0"
+                    AnchorPane.bottomAnchor="0"
+                    AnchorPane.leftAnchor="0"
+                    AnchorPane.rightAnchor="0">
+            <text></text>
+            <content>
+                <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                    <TitledPane collapsible="false" >
+                        <text>Titre</text>
+                        <content>
+                            <TextField fx:id="title" onKeyReleased="#handleTitleChanged" />
+                        </content>
+                    </TitledPane>
+
+
+                    <TitledPane collapsible="false" >
+                        <text>Image</text>
+                        <content>
+                            <HBox>
+                                <TextField fx:id="path" editable="false" HBox.hgrow="ALWAYS"  />
+                                <Button onAction="#handleBrowse" text="..." />
+                            </HBox>
+                        </content>
+                    </TitledPane>
+
+                    <TitledPane collapsible="false" >
+                        <text>Texte</text>
+                        <content>
+                            <TextArea fx:id="text" onKeyReleased="#handleTextChanged" />
+                        </content>
+                    </TitledPane>
+                </VBox>
+            </content>
+        </TitledPane>
+    </children>
+</fx:root>

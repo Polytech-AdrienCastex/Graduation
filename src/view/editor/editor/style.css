@@ -1,0 +1,28 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.mainFxmlClass {
+
+}
+
+#cttl
+{
+    -fx-text-fill: red;
+}
+
+#leftSection,
+#rightSection
+{
+    -fx-padding: 3px;
+}
+
+#sectionTitle
+{
+    -fx-font-size: 23;
+}
+
+.segmented-button-bar
+{
+    -fx-spacing: 5px;
+}

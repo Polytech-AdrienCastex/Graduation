@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.layout.AnchorPane"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <TitledPane collapsible="false" >
+                <text>Titre</text>
+                <content>
+                    <TextField fx:id="title" onKeyReleased="#handleTitleChanged"  />
+                </content>
+            </TitledPane>
+            
+            
+            <TitledPane collapsible="false" >
+                <text>Fichiers</text>
+                <content>
+                    <HBox>
+                        <TextField fx:id="path" editable="false" HBox.hgrow="ALWAYS"  />
+                        <Button onAction="#handleBrowse" text="..." />
+                    </HBox>
+                </content>
+            </TitledPane>
+            
+            <Label fx:id="nbStudents"></Label>
+        </VBox>
+    </children>
+</fx:root>
