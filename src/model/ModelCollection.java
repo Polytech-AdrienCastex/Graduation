@@ -1,13 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
 import model.model.Section;
 import model.model.Talk;
-import model.model.Side;
 import model.serializable.XMLSerializable;
 import model.image.ResourceImage;
 import model.image.Image;
@@ -17,13 +11,14 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import model.model.Details;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -31,14 +26,15 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author Adrien
+ * @author Adrien Castex
  */
 public class ModelCollection
 {
     private ModelCollection()
     { }
     
-    private final Collection<Section> sections = new ArrayList<>();
+    private Details details;
+    private final Collection<Section> sections = new LinkedList<>();
     private final Collection<Talk> talks = new LinkedList<>();
     
     public Collection<Section> getSections()
@@ -49,6 +45,10 @@ public class ModelCollection
     {
         return talks;
     }
+    public Details getDetails()
+    {
+        return details;
+    }
     
     public static Builder create()
     {
@@ -56,7 +56,7 @@ public class ModelCollection
     }
     public static class Builder
     {
-        private ModelCollection model = new ModelCollection();
+        private final ModelCollection model = new ModelCollection();
         
         public Builder addSection(Section section)
         {
@@ -66,6 +66,11 @@ public class ModelCollection
         public Builder addTalk(Talk talk)
         {
             model.talks.add(talk);
+            return this;
+        }
+        public Builder setDetails(Details details)
+        {
+            model.details = details;
             return this;
         }
         
@@ -100,6 +105,24 @@ public class ModelCollection
         return Image.getImageByID(uid);
     }
     
+    protected static String extractString(Collection<Node> nodes, String tagName)
+    {
+        return nodes.stream()
+                .filter(n -> tagName.toLowerCase().equals(n.getNodeName().toLowerCase()))
+                .map(Node::getTextContent)
+                .findFirst()
+                .orElse("");
+    }
+    protected static Image extractImage(Collection<Node> nodes, String tagName)
+    {
+        return nodes.stream()
+                .filter(n -> tagName.toLowerCase().equals(n.getNodeName().toLowerCase()))
+                .map(ModelCollection::toImage)
+                .filter(i -> i != null)
+                .findFirst()
+                .orElse(null);
+    }
+    
     public static ModelCollection load(File source) throws ParserConfigurationException, SAXException, IOException
     {
         ModelCollection model = new ModelCollection();
@@ -130,9 +153,6 @@ public class ModelCollection
                 bais.read(data_d, 0, data_size);
                 
                 // Reference the resource
-                System.out.println(uid_size);
-                System.out.println(uid_d.length);
-                System.out.println(":: " + new String(uid_d));
                 ResourceImage ri = new ResourceImage(data_d, new BigInteger(new String(uid_d)));
             }
         }
@@ -141,22 +161,30 @@ public class ModelCollection
 	DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 	Document doc = dBuilder.parse(source);
         
+        // Load details
+        toStream(doc.getElementsByTagName("details"))
+                .map(Node::getChildNodes)
+                .map(ModelCollection::toCollection)
+                .map(ns -> new Details(
+                        ns.stream()
+                                .filter(n -> "year".equals(n.getNodeName().toLowerCase()))
+                                .map(Node::getTextContent)
+                                .map(Integer::parseInt)
+                                .findFirst()
+                                .orElseGet(() -> Calendar.getInstance().get(Calendar.YEAR)),
+                        extractString(ns, "presentationText"),
+                        extractString(ns, "sectionIntroText"),
+                        extractString(ns, "congratulationText"),
+                        extractImage(ns, "polytechImage")))
+                .findFirst()
+                .ifPresent(d -> model.details = d);
+        
         // Load sections
         toStream(doc.getElementsByTagName("section"))
                 .map(Node::getChildNodes)
                 .map(ModelCollection::toCollection)
                 .map(ns -> new Section(
-                        ns.stream()
-                                .filter(n -> "name".equals(n.getNodeName().toLowerCase()))
-                                .map(Node::getTextContent)
-                                .findFirst()
-                                .orElse(""),
-                        ns.stream()
-                                .filter(n -> "side".equals(n.getNodeName().toLowerCase()))
-                                .map(Node::getTextContent)
-                                .map(Side::getFromValue)
-                                .findFirst()
-                                .orElse(Side.LEFT)))
+                        extractString(ns, "name")))
                 .forEach(model.sections::add);
         
         // Load talks
@@ -164,22 +192,9 @@ public class ModelCollection
                 .map(Node::getChildNodes)
                 .map(ModelCollection::toCollection)
                 .map(ns -> new Talk(
-                        ns.stream()
-                                .filter(n -> "title".equals(n.getNodeName().toLowerCase()))
-                                .map(Node::getTextContent)
-                                .findFirst()
-                                .orElse(""),
-                        ns.stream()
-                                .filter(n -> "text".equals(n.getNodeName().toLowerCase()))
-                                .map(Node::getTextContent)
-                                .findFirst()
-                                .orElse(""),
-                        ns.stream()
-                                .filter(n -> "image".equals(n.getNodeName().toLowerCase()))
-                                .map(ModelCollection::toImage)
-                                .filter(i -> i != null)
-                                .findFirst()
-                                .orElse(null)))
+                        extractString(ns, "title"),
+                        extractString(ns, "text"),
+                        extractImage(ns, "image")))
                 .forEach(model.talks::add);
         
         return model;
@@ -221,6 +236,8 @@ public class ModelCollection
                 .map(XMLSerializable::toXML)
                 .reduce("", (s1,s2) -> s1 + s2);
         xml += "</talks>";
+        
+        xml += details.toXML();
         
         xml += "</model>";
         

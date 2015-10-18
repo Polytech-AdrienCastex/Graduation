@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.editor.editor;
 
 import model.ModelCollection;
-import model.model.Side;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,13 +15,14 @@ import javafx.stage.FileChooser;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
 import view.FxmlRunner;
+import view.editor.details.Details;
 import view.editor.section.Section;
 import view.editor.talk.Talk;
 
 /**
  * FXML Controller class
  *
- * @author Adrien
+ * @author Adrien Castex
  */
 public class EditorWindowController extends FxmlRunner implements Initializable
 {
@@ -47,9 +42,9 @@ public class EditorWindowController extends FxmlRunner implements Initializable
         launch();
     }
     
-    @FXML private Section leftSection;
-    @FXML private Section rightSection;
+    @FXML private VBox sections;
     @FXML private VBox talks;
+    @FXML private Details details;
     
     private FileChooser createFileChooser(String title)
     {
@@ -71,8 +66,14 @@ public class EditorWindowController extends FxmlRunner implements Initializable
         if(f != null)
         {
             ModelCollection.Builder builder = ModelCollection.create()
-                    .addSection(leftSection.getSection())
-                    .addSection(rightSection.getSection());
+                    .setDetails(details.getDetails());
+            
+            sections.getChildren()
+                    .stream()
+                    .filter(Section.class::isInstance)
+                    .map(n -> (Section)n)
+                    .map(Section::getSection)
+                    .forEach(builder::addSection);
             
             talks.getChildren()
                     .stream()
@@ -104,19 +105,23 @@ public class EditorWindowController extends FxmlRunner implements Initializable
                 ModelCollection mc = ModelCollection.load(f);
                 
                 talks.getChildren().clear();
+                sections.getChildren().clear();
             
                 mc.getTalks()
                         .stream()
                         .map(t -> { Talk tt = new Talk(); tt.setTalk(t); return tt; })
                         .forEach(talks.getChildren()::add);
-
+                
+                
                 mc.getSections()
                         .stream()
-                        .forEach(s -> {if(s.side == Side.LEFT) leftSection.setSection(s); else rightSection.setSection(s);});
+                        .map(s -> { Section ss = new Section(); ss.setSection(s); return ss; })
+                        .forEach(sections.getChildren()::add);
+                
+                details.setDetails(mc.getDetails());
             }
             catch (ParserConfigurationException | SAXException | IOException ex)
             {
-                ex.printStackTrace();
                 // ERROR
             }
         }
@@ -135,5 +140,16 @@ public class EditorWindowController extends FxmlRunner implements Initializable
     @FXML protected void handleClearTalks(ActionEvent event)
     {
         talks.getChildren().clear();
+    }
+    
+    @FXML protected void handleAddSection(ActionEvent event)
+    {
+        Section s = new Section();
+        sections.getChildren().add(s);
+    }
+    
+    @FXML protected void handleClearSections(ActionEvent event)
+    {
+        sections.getChildren().clear();
     }
 }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root type="javafx.scene.layout.AnchorPane"
+         xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+            <TitledPane collapsible="false" >
+                <text>Année</text>
+                <content>
+                    <TextField fx:id="year" onKeyReleased="#handleYearChanged" />
+                </content>
+            </TitledPane>
+            
+            <TitledPane collapsible="false" >
+                <text>Texte de présentation</text>
+                <content>
+                    <TextField fx:id="presentationText" onKeyReleased="#handlePresentationTextChanged" />
+                </content>
+            </TitledPane>
+            
+            <TitledPane collapsible="false" >
+                <text>Introduction aux listes d'étudiants</text>
+                <content>
+                    <TextField fx:id="sectionIntroText" onKeyReleased="#handleSectionIntroTextChanged" />
+                </content>
+            </TitledPane>
+            
+            <TitledPane collapsible="false" >
+                <text>Texte de félicitation</text>
+                <content>
+                    <TextField fx:id="congratulationText" onKeyReleased="#handleCongratulationTextChanged" />
+                </content>
+            </TitledPane>
+
+            <TitledPane collapsible="false" >
+                <text>Logo Polytech</text>
+                <content>
+                    <HBox>
+                        <TextField fx:id="polytechImage" editable="false" HBox.hgrow="ALWAYS"  />
+                        <Button onAction="#handleBrowse" text="..." />
+                    </HBox>
+                </content>
+            </TitledPane>
+            
+            <VBox fx:id="explanation" style="-fx-background-color: white; -fx-padding: 10;">
+                <Label text="Tout texte '%YEAR_SYMBOL' est remplacé par l'année lors de la présentation." />
+                <Label text="Exemple pour l'année 2015 :" />
+                <Label text=" * Bienvenue en l'an %Y" />
+                <Label text="Se transforme en :" />
+                <Label text=" * Bienvenue en l'an 2015" />
+            </VBox>
+        </VBox>
+    </children>
+</fx:root>

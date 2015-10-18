@@ -47,22 +47,23 @@
             
             
             <Tab text="Listes">
-                <SplitPane orientation="HORIZONTAL">
-                    <VBox>
-                        <HBox alignment="CENTER">
-                            <Label id="sectionTitle">Gauche</Label>
+                <VBox>
+                    <ToolBar>
+                        <Region styleClass="spacer" />
+                        <HBox styleClass="segmented-button-bar">
+                            <Button text="Ajouter" onAction="#handleAddSection" />
+                            <Button text="Tout effacer" onAction="#handleClearSections" />
                         </HBox>
-                        <view.editor.section.Section fx:id="leftSection" side="LEFT" />
-                    </VBox>
-                    <VBox>
-                        <HBox alignment="CENTER">
-                            <Label id="sectionTitle">Droite</Label>
-                        </HBox>
-                        <view.editor.section.Section fx:id="rightSection" side="RIGHT" />
-                    </VBox>
-                </SplitPane>
+                    </ToolBar>
+                    <ScrollPane fitToWidth="true">
+                        <VBox fx:id="sections"></VBox>
+                    </ScrollPane>
+                </VBox>
             </Tab>
             
+            <Tab text="Détails">
+                <view.editor.details.Details fx:id="details"></view.editor.details.Details>
+            </Tab>
             
             <Tab text="Opérations">
                 <GridPane alignment="CENTER"

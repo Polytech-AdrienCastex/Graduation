@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.editor.talk;
 
 import model.image.LocalImage;
@@ -21,7 +16,7 @@ import view.FxmlElement;
 
 /**
  *
- * @author Adrien
+ * @author Adrien Castex
  */
 public class Talk extends FxmlElement
 {
@@ -35,10 +30,7 @@ public class Talk extends FxmlElement
     {
         super.initialize(url, rb);
         
-        talk = model.model.Talk.createDefault();
-        title.setText(talk.title);
-        bigTP.setText(talk.title);
-        text.setText(talk.text);
+        setTalk(model.model.Talk.createDefault());
     }
     
     private model.model.Talk talk;

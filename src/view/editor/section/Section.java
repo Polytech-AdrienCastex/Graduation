@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view.editor.section;
 
-import model.model.Side;
 import model.model.Student;
 import java.io.File;
 import java.net.URL;
@@ -13,13 +7,12 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.DirectoryChooser;
@@ -27,7 +20,7 @@ import view.FxmlElement;
 
 /**
  *
- * @author Adrien
+ * @author Adrien Castex
  */
 public class Section extends FxmlElement
 {
@@ -40,14 +33,16 @@ public class Section extends FxmlElement
     public void initialize(URL url, ResourceBundle rb)
     {
         super.initialize(url, rb);
+        
+        setSection(model.model.Section.createDefault());
     }
     
     private model.model.Section section;
-    @FXML private Side side;
     
     @FXML private TextField title;
     @FXML private TextField path;
     @FXML private Label nbStudents;
+    @FXML private TitledPane bigTP;
     
     public model.model.Section getSection()
     {
@@ -59,6 +54,7 @@ public class Section extends FxmlElement
         
         setStudents(section.students);
         title.setText(section.name);
+        bigTP.setText(section.name);
     }
     
     public void setStudents(Collection<Student> students)
@@ -72,18 +68,6 @@ public class Section extends FxmlElement
             nbStudents.setTextFill(Paint.valueOf("red"));
         else
             nbStudents.setTextFill(Paint.valueOf("green"));
-    }
-    
-    public void setSide(Side side)
-    {
-        this.side = side;
-        
-        section = model.model.Section.createDefault(side);
-        title.setText(section.name);
-    }
-    public Side getSide()
-    {
-        return side;
     }
     
     private Collection<Student> extractFolder(File dir)
@@ -112,5 +96,6 @@ public class Section extends FxmlElement
     @FXML protected void handleTitleChanged(KeyEvent event)
     {
         section.name = title.getText();
+        bigTP.setText(section.name);
     }
 }
