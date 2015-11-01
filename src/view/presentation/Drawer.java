@@ -115,7 +115,7 @@ public abstract class Drawer<T>
         if(backgroundTopImage == null)
             try
             {
-                backgroundTopImage = ImageIO.read(new File("E:\\other\\Graduation\\bg_big.jpg"));
+                backgroundTopImage = ImageIO.read(Drawer.class.getClassLoader().getResourceAsStream("view/presentation/resources/bg_big.jpg"));
             }
             catch (IOException ex)
             { }
