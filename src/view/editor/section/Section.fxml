@@ -42,5 +42,6 @@
         </TitledPane>
         <Button layoutY="0" fx:id="upBtn" onAction="#handleUp" text="↑" />
         <Button layoutY="0" fx:id="downBtn" onAction="#handleDown" text="↓" />
+        <Button layoutY="0" fx:id="removeBtn" onAction="#handleRemove" text="X" />
     </children>
 </fx:root>

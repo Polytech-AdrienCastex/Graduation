@@ -13,6 +13,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import view.FxmlElement;
 
@@ -42,8 +43,9 @@ public class Talk extends FxmlElement
     public void resize(double width, double height)
     {
         super.resize(width, height);
-        upBtn.setLayoutX(width - 60);
-        downBtn.setLayoutX(width - 30);
+        upBtn.setLayoutX(width - 80);
+        downBtn.setLayoutX(width - 55);
+        removeBtn.setLayoutX(width - 30);
     }
     
     private model.model.Talk talk;
@@ -53,6 +55,7 @@ public class Talk extends FxmlElement
     
     @FXML private Button upBtn;
     @FXML private Button downBtn;
+    @FXML private Button removeBtn;
     @FXML private TextField title;
     @FXML private TextField path;
     @FXML private TextArea text;
@@ -64,7 +67,7 @@ public class Talk extends FxmlElement
         title.setText(talk.title);
         bigTP.setText(talk.title);
         text.setText(talk.text);
-        path.setText(talk.picture == null ? "" : "@" + talk.picture.getID().toString());
+        path.setText(talk.picture == null ? "" : "Image présente en mémoire");
     }
     public model.model.Talk getTalk()
     {
@@ -102,5 +105,9 @@ public class Talk extends FxmlElement
     @FXML protected void handleDown(ActionEvent event)
     {
         onDown.handle(new ActionEvent(this, event.getTarget()));
+    }
+    @FXML protected void handleRemove(ActionEvent event)
+    {
+        ((Pane)this.getParent()).getChildren().remove(this);
     }
 }

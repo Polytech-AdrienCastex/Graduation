@@ -10,12 +10,14 @@ import java.util.stream.Stream;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.stage.DirectoryChooser;
 import view.FxmlElement;
@@ -49,6 +51,7 @@ public class Section extends FxmlElement
     
     @FXML private Button upBtn;
     @FXML private Button downBtn;
+    @FXML private Button removeBtn;
     @FXML private TextField title;
     @FXML private TextField path;
     @FXML private Label nbStudents;
@@ -65,14 +68,16 @@ public class Section extends FxmlElement
         updateStudents(section.students);
         title.setText(section.name);
         bigTP.setText(section.name);
+        path.setText(section.students.isEmpty() ? "" : section.students.size() + " étudiants en mémoire");
     }
 
     @Override
     public void resize(double width, double height)
     {
         super.resize(width, height);
-        upBtn.setLayoutX(width - 60);
-        downBtn.setLayoutX(width - 30);
+        upBtn.setLayoutX(width - 80);
+        downBtn.setLayoutX(width - 55);
+        removeBtn.setLayoutX(width - 30);
     }
     
     public void setStudents(Collection<Student> students)
@@ -127,5 +132,9 @@ public class Section extends FxmlElement
     @FXML protected void handleDown(ActionEvent event)
     {
         onDown.handle(new ActionEvent(this, event.getTarget()));
+    }
+    @FXML protected void handleRemove(ActionEvent event)
+    {
+        ((Pane)this.getParent()).getChildren().remove(this);
     }
 }

@@ -61,7 +61,7 @@ public class Details extends FxmlElement
         sectionIntroText.setText(details.sectionIntroText);
         presentationText.setText(details.presentationText);
         congratulationText.setText(details.congratulationText);
-        polytechImage.setText(details.polytechImage == null ? "" : "@" + details.polytechImage.getID().toString());
+        polytechImage.setText(details.polytechImage == null ? "" : "Image présente en mémoire");
     }
     
     @FXML protected void handleBrowse(ActionEvent event)
