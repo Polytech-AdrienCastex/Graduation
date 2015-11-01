@@ -69,7 +69,7 @@ public class Details implements XMLSerializable
         if(polytechImage == null)
             xml += "<polytechImage/>";
         else
-            xml += "<polytechImage>" + polytechImage.getID() + "</polytechImage>";
+            xml += "<polytechImage>" + polytechImage.getID().toString(10) + "</polytechImage>";
         
         xml += "</details>";
         

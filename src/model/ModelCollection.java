@@ -14,11 +14,13 @@ import java.nio.file.StandardOpenOption;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import model.model.Details;
+import model.model.Student;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -122,6 +124,15 @@ public class ModelCollection
                 .findFirst()
                 .orElse(null);
     }
+    protected static Collection<Student> extractStudents(Collection<Node> nodes)
+    {
+        return nodes.stream()
+                .filter(n -> "student".toLowerCase().equals(n.getNodeName().toLowerCase()))
+                .map(Node::getChildNodes)
+                .map(ModelCollection::toCollection)
+                .map(sn -> new Student(extractString(sn, "name"), extractString(sn, "firstname"), extractImage(sn, "image")))
+                .collect(Collectors.toList());
+    }
     
     public static ModelCollection load(File source) throws ParserConfigurationException, SAXException, IOException
     {
@@ -183,8 +194,12 @@ public class ModelCollection
         toStream(doc.getElementsByTagName("section"))
                 .map(Node::getChildNodes)
                 .map(ModelCollection::toCollection)
-                .map(ns -> new Section(
-                        extractString(ns, "name")))
+                .map(ns ->
+                {
+                    Section s = new Section(extractString(ns, "name"));
+                    s.addStudents(extractStudents(ns));
+                    return s;
+                })
                 .forEach(model.sections::add);
         
         // Load talks
@@ -251,7 +266,7 @@ public class ModelCollection
                 .forEach(p ->
                 {
                     // UID_SIZE | UID | DATA_SIZE | DATA...
-                    String uid = p.getID().toString(16);
+                    String uid = p.getID().toString(10);
                     int uid_size = uid.length();
                     byte[] ds = p.toBinary();
                     int data_size = ds.length;

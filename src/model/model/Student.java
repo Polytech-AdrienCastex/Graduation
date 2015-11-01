@@ -24,17 +24,17 @@ public class Student implements XMLSerializable
     
     public static boolean isValid(File file)
     {
-        String[] names = file.getName().split(".");
+        String[] names = file.getName().split("\\.");
         return names.length >= 3
-                 && names[0].matches("^[0-9]*$")
-                 && names[1].matches("^[a-zA-Z\\-\\_]*$")
-                 && names[2].matches("^[a-zA-Z\\-\\_]*$");
+                 && names[0].matches("^[0-9]+$")
+                 && names[1].matches("^[a-zA-Z\\-\\_]+$")
+                 && names[2].matches("^[a-zA-Z\\-\\_]+$");
     }
     
     public static Student createFromFile(File file)
     {
-        String[] names = file.getName().split(".");
-        return new Student(names[1], names[2], new LocalImage(file));
+        String[] names = file.getName().split("\\.");
+        return new Student(names[2], names[1], new LocalImage(file));
     }
     public static Student createDefault()
     {
@@ -54,7 +54,7 @@ public class Student implements XMLSerializable
         if(picture == null)
             xml += "<image/>";
         else
-            xml += "<image>" + picture.getID() + "</image>";
+            xml += "<image>" + picture.getID().toString(10) + "</image>";
         
         xml += "</student>";
         

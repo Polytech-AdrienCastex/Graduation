@@ -1,6 +1,7 @@
 package controller;
 
-import view.editor.editor.EditorWindowController;
+import java.awt.GraphicsEnvironment;
+import view.editor.window.EditorWindow;
 
 /**
  *
@@ -15,7 +16,12 @@ public class Graduation
      */
     public static void main(String[] args)
     {
-        EditorWindowController.run();
+        EditorWindow.run();
     }
     
+    protected static void listAllFonts()
+    {
+        for(String s : GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames())
+            System.out.println(s);
+    }
 }

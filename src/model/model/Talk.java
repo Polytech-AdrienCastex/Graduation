@@ -38,7 +38,7 @@ public class Talk implements XMLSerializable
         if(picture == null)
             xml += "<image/>";
         else
-            xml += "<image>" + picture.getID() + "</image>";
+            xml += "<image>" + picture.getID().toString(10) + "</image>";
         
         xml += "</talk>";
         

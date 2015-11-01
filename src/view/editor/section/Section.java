@@ -8,8 +8,10 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -24,9 +26,12 @@ import view.FxmlElement;
  */
 public class Section extends FxmlElement
 {
-    public Section()
+    public Section(EventHandler<ActionEvent> onUp, EventHandler<ActionEvent> onDown)
     {
         load("/view/editor/section/Section.fxml");
+        
+        this.onUp = onUp;
+        this.onDown = onDown;
     }
 
     @Override
@@ -39,6 +44,11 @@ public class Section extends FxmlElement
     
     private model.model.Section section;
     
+    @FXML private EventHandler<ActionEvent> onUp;
+    @FXML private EventHandler<ActionEvent> onDown;
+    
+    @FXML private Button upBtn;
+    @FXML private Button downBtn;
     @FXML private TextField title;
     @FXML private TextField path;
     @FXML private Label nbStudents;
@@ -52,16 +62,27 @@ public class Section extends FxmlElement
     {
         this.section = section;
         
-        setStudents(section.students);
+        updateStudents(section.students);
         title.setText(section.name);
         bigTP.setText(section.name);
+    }
+
+    @Override
+    public void resize(double width, double height)
+    {
+        super.resize(width, height);
+        upBtn.setLayoutX(width - 60);
+        downBtn.setLayoutX(width - 30);
     }
     
     public void setStudents(Collection<Student> students)
     {
-        String plur = students.size() > 1 ? "s" : "";
-        
         section.setStudents(students);
+        updateStudents(students);
+    }
+    protected void updateStudents(Collection<Student> students)
+    {
+        String plur = students.size() > 1 ? "s" : "";
         nbStudents.setText(students.size() + " étudiant" + plur + " trouvé" + plur + "!");
 
         if(students.isEmpty())
@@ -97,5 +118,14 @@ public class Section extends FxmlElement
     {
         section.name = title.getText();
         bigTP.setText(section.name);
+    }
+    
+    @FXML protected void handleUp(ActionEvent event)
+    {
+        onUp.handle(new ActionEvent(this, event.getTarget()));
+    }
+    @FXML protected void handleDown(ActionEvent event)
+    {
+        onDown.handle(new ActionEvent(this, event.getTarget()));
     }
 }

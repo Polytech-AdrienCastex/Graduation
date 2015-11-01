@@ -62,7 +62,7 @@ public abstract class Image implements BinarySerializable
     {
         synchronized(sUID)
         {
-            sUID.add(BigInteger.ONE);
+            sUID = sUID.add(BigInteger.ONE);
             return sUID;
         }
     }

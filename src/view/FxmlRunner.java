@@ -14,10 +14,17 @@ public abstract class FxmlRunner extends Application
 {
     protected abstract String getFxmlPath();
     
+    private Stage primaryStage = null;
+    protected Stage getStage()
+    {
+        return primaryStage;
+    }
+    
     @Override
     public void start(Stage primaryStage)
     {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(getFxmlPath()));
+        fxmlLoader.setController(this);
         
         try
         {
@@ -29,6 +36,8 @@ public abstract class FxmlRunner extends Application
         }
         
         Scene scene = new Scene(fxmlLoader.getRoot(), 600, 500);
+        
+        this.primaryStage = primaryStage;
         
         primaryStage.setTitle("Remise des diplomes");
         primaryStage.setScene(scene);
