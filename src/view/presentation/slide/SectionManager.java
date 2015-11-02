@@ -82,7 +82,6 @@ public class SectionManager extends Drawer<Collection<model.model.Section>>
      * DRAWING
      **************************************************************************/
     private static final int MARGIN = 20;
-    private static final int IMAGE_H = 500;
     private static final double IMAGE_RATIO = 242f / 302f;
     private static final int TEXT_ROW_SPACE = 5;
     
@@ -98,13 +97,16 @@ public class SectionManager extends Drawer<Collection<model.model.Section>>
         int locationXLimit = (g.getClipBounds().width - MARGIN * 2) / indexes.length * (index + 1) + MARGIN;
         int centerX = (locationXLimit + locationX) / 2;
         
+        int IMAGE_H = (int)(500 / 1080f * g.getClipBounds().height);
+        int GAP_IMAGE_TEXT = (int)(20 / 1080f * g.getClipBounds().height);
+        int GAP_TITLE_TOP = (int)(20 / 1080f * g.getClipBounds().height);
         
-        int y = MARGIN + 10 + 400;
+        int y = MARGIN + 10 + (int)(300 / 1080f * g.getClipBounds().height);
         
-        g.setFont(g.getFont().deriveFont(50f));
+        g.setFont(g.getFont().deriveFont(75f / 1920 * g.getClipBounds().width));
         g.setColor(new Color(255, 255, 255));
         
-        int yi = MARGIN + 10;
+        int yi = MARGIN + GAP_TITLE_TOP;
         int gh = g.getFontMetrics().getHeight();
         for(String s : splitToFit(is.getSection().name, g, 0, locationXLimit - locationX))
         {
@@ -115,19 +117,17 @@ public class SectionManager extends Drawer<Collection<model.model.Section>>
         
         try
         {
-            g.setFont(g.getFont().deriveFont(50f));
+            g.setFont(g.getFont().deriveFont(75f / 1920 * g.getClipBounds().width));
             g.setColor(new Color(50, 50, 200));
 
             int w = (int)(IMAGE_RATIO * IMAGE_H);
             g.drawImage(is.getStudent().picture.getImage(), centerX - w / 2, y, w, IMAGE_H, null);
             
-            String fullName = is.getStudent().firstName + is.getStudent().name.toUpperCase();
-            g.drawString(fullName, (int)(centerX - g.getFontMetrics().getStringBounds(fullName, g).getWidth() / 2), y + IMAGE_H + 50 + g.getFontMetrics().getHeight());
+            String fullName = is.getStudent().firstName + " " + is.getStudent().name.toUpperCase();
+            g.drawString(fullName, (int)(centerX - g.getFontMetrics().getStringBounds(fullName, g).getWidth() / 2), y + IMAGE_H + GAP_IMAGE_TEXT + g.getFontMetrics().getHeight());
         }
         catch (IOException ex)
         { }
-        
-        g.drawLine(locationX, 0, locationX + 100, 100);
     }
     
     protected void globalDrawAfter(Graphics g)

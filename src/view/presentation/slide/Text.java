@@ -31,7 +31,7 @@ public class Text extends Drawer<String>
         
         // Draw text
         g.setColor(new Color(0, 0, 0, opacity));
-        g.setFont(g.getFont().deriveFont(200f));
+        g.setFont(g.getFont().deriveFont(200f / 1920 * g.getClipBounds().width));
         
         int y = MARGIN + 10;
         int gh = g.getFontMetrics().getHeight();
